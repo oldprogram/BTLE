@@ -3,5 +3,85 @@
 
 #define @USE_RFBOARD@
 
+
+#ifdef USE_BLADERF
+#include <libbladeRF.h>
+#else
+#include <hackrf.h>
+#endif
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <ctype.h>
+#include <math.h>
+#include <getopt.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+
+#include <netinet/in.h>
+#include <pthread.h>
+
+
+
+#ifndef bool
+typedef int bool;
+#define true 1
+#define false 0
+#endif
+
+#ifdef _WIN32
+#include <windows.h>
+
+#ifdef _MSC_VER
+
+#ifdef _WIN64
+typedef int64_t ssize_t;
+#else
+typedef int32_t ssize_t;
+#endif
+
+#define strtoull _strtoui64
+#define snprintf _snprintf
+
+int gettimeofday(struct timeval *tv, void* ignored)
+{
+    FILETIME ft;
+    unsigned __int64 tmp = 0;
+    if (NULL != tv) {
+        GetSystemTimeAsFileTime(&ft);
+        tmp |= ft.dwHighDateTime;
+        tmp <<= 32;
+        tmp |= ft.dwLowDateTime;
+        tmp /= 10;
+        tmp -= 11644473600000000Ui64;
+        tv->tv_sec = (long)(tmp / 1000000UL);
+        tv->tv_usec = (long)(tmp % 1000000UL);
+    }
+    return 0;
+}
+
+
+#endif
+#endif
+
+#if defined(__GNUC__)
+#include <unistd.h>
+#include <sys/time.h>
+#endif
+
+#include <signal.h>
+
+#if defined _WIN32
+#define sleep(a) Sleep( (a*1000) )
+#endif
+
+
+#include "./common/app_tools.h"
+
 #endif
 

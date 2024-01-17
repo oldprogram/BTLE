@@ -28,10 +28,10 @@ add_library(libgetopt_static STATIC
 )
 endif()
 
-add_executable(btle_tx btle_tx.c)
+add_executable(btle_tx btle_tx.c ./tx/app_parse_input.c ./tx/app_board.c ./common/app_tools.c ./tx/app_calculate_pkt.c ./tx/app_ble_tools.c)
 install(TARGETS btle_tx RUNTIME DESTINATION ${INSTALL_DEFAULT_BINDIR})
 
-add_executable(btle_rx btle_rx.c)
+add_executable(btle_rx btle_rx.c ./rx/app_parse_input.c ./rx/app_board.c ./common/app_tools.c ./rx/app_calculate_pkt.c ./rx/app_ble_tools.c)
 install(TARGETS btle_rx RUNTIME DESTINATION ${INSTALL_DEFAULT_BINDIR})
 
 IF (USE_BLADERF MATCHES 1)
